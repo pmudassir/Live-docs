@@ -1,6 +1,7 @@
 'use server'
 import { nanoid } from 'nanoid'
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { liveblocks } from '../liveblocks';
 import { getAccessType, parseStringify } from '../utils';
 
@@ -112,3 +113,13 @@ export const removeCollaborator = async ({ roomId, email }: { roomId: string, em
     console.log(`Error removing collaborator: ${error}`);
   }
 }
+
+export const deleteDocument = async (roomId: string) => {
+  try {
+    await liveblocks.deleteRoom(roomId)
+    revalidatePath('/')
+    redirect('/')
+  } catch (error) {
+    console.log(`Error deleting room: ${error}`);
+  }
+} 
